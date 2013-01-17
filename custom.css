@@ -1,0 +1,20 @@
+table {
+	border: 1px solid black;
+	border-spacing: 0px;
+	margin: 10px;
+	padding: 0px;
+	float: left;
+
+}
+
+td {
+	width: 15px;
+	height: 15px;
+}
+.class-1 {	background: #909090; }
+.class1 {	background: #B6AD01; }
+.class2 {	background: #4AB300; }
+.class3 {	background: #05CC87; }
+.class4 {	background: #0753BE; }
+.class5 {	background: #940DD4; }
+.class6 {	background: #E81313; }
