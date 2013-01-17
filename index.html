@@ -23,7 +23,7 @@
     <input type="range" data-bind="value: newItemHeight" min="1" max="6" step="1">
     <span type="text" value="0" data-bind="text: newItemHeight"></span>
     <br/>
-    <input type="submit" value="Поставить" data-bind="click: addItem">
+    <input type="submit" id="putItem" value="Поставить" data-bind="click: addItem">
   <div data-bind="foreach: S">
     <table data-bind="foreach: $data">
       <tr data-bind="foreach: $data">
@@ -84,10 +84,11 @@ function AppViewModel() {
     var freeSpace;
 
     var fromPoint =  {};
-    fromPoint.w = 0;
-    fromPoint.h = 0;
 
     for (;k  < sc; k++) {
+  
+      fromPoint.w = 0;
+      fromPoint.h = 0;
   
       var h = self.S()[k]().length;
       var w = self.S()[k]()[0]().length;
@@ -95,11 +96,14 @@ function AppViewModel() {
       var j = 0; 
 
       freeSpace  = {w: 0, h: 0};
+      var unwatchedRows = [];
       for (;i < h && freeSpace.h < item.h; i++) {
 
-        j = fromPoint.w;
-        freeSpace.w = 0; 
+        j = 0 || fromPoint.w;
+        freeSpace.w = 0;
 
+        // possible rows to find another space to put item 
+        
         for (;j < w && freeSpace.w < item.w; j++) {
           
           // if place is free add to counter
@@ -107,12 +111,19 @@ function AppViewModel() {
             freeSpace.w++; 
           }
           
-          // else, zero counter and make mark to search 
-          // free place in next row from this position.
+          // else, zero counter and search new empty space
           else { 
 
             freeSpace.w = 0; 
-            fromPoint.w = j+1; 
+            freeSpace.h = 0; 
+            
+            // try to watch that lines, which we give up earlier
+            if (unwatchedRows.length > 0) {
+              var r = unwatchedRows.pop();
+              j = r.j;
+              i = r.i;
+            }
+
           }
 
         }
@@ -123,7 +134,16 @@ function AppViewModel() {
           freeSpace.h = 0;
         }
         else {
+          // store the line number to return 
+          // if will not find free place here
+          if (freeSpace.h == 0) {
+            // j = j - 1 to continue from last place 
+            unwatchedRows.push({'i': i, 'j': j-1});
+          }
+
           freeSpace.h++;
+          fromPoint.w = j - item.w; 
+
         }
 
       }
@@ -133,6 +153,10 @@ function AppViewModel() {
         freeSpace.w = j - freeSpace.w;
         freeSpace.h = i - freeSpace.h;
         freeSpace.container = k;
+        if (item.w == 1 && freeSpace.h !=0 && self.S()[k]()[freeSpace.h-1]()[freeSpace.w] == -1) {
+          console.log("??.")
+          
+        }
         if (self.S()[k]()[freeSpace.h]()[freeSpace.w] != -1) {
           console.log("hm.")
         }
@@ -176,7 +200,6 @@ function AppViewModel() {
   self.getClass = function (number) {
     return 'class'+number;
   };
-
 
 window.avm = self;
 
