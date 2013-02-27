@@ -70,7 +70,7 @@ angular.module("game", []).
 		/**
 		 * Count waiting time, or suspend.
 		 * 
-		 * @param  {[type]} K  K(U) coefficients.
+		 * @param  {Array} K  K(U) coefficients.
 		 * @return {[type]}    waiting time.
 		 */
 		lab1.X = function (K) {
@@ -126,6 +126,57 @@ angular.module("game", []).
 			return newSequences;
 		};
 
+		/**
+		 * Just draw rectangle. 
+		 * @param  {Canvas 2D context} canvas [description]
+		 * @param  {String} text   [description]
+		 * @param  {String} color  [description]
+		 * @param  {Object} point  [description]
+		 * @param  {Object} size   [description]
+		 */
+		function drawRect(ctx, text, color, point, size) {
+			
+
+			ctx.lineWidth = 2;
+			
+			/* Rectangle */
+			ctx.fillStyle = color;
+			ctx.strokeStyle = "#000";
+			ctx.strokeRect (point.left, point.top, size.w, size.h);
+			ctx.fillRect (point.left, point.top, size.w, size.h);
+			
+			/* Text, on the center of rectangle*/
+			ctx.fillStyle = "#000";
+			ctx.font = "16pt Ubuntu";
+
+			var textPos = {};
+				textPos.x = point.left + (size.w/2) - 5;
+				textPos.y = point.top + (size.h/2) + 5;
+
+			ctx.fillText(text, textPos.x, textPos.y);
+		}
+
+		function drawSequence(ctx, color, name, seq, depSeq, scale) {
+
+			scale = scale || 20;
+			var point = {top: 20, left: 20};
+			var size = {w: 0, h: 30};
+
+			seq.forEach(function (el, i) {
+
+				size.w = el * scale;
+				drawRect(ctx, name + i, color, point, size);
+				point.left += size.w + 2;
+
+			});
+		}
+		
+		var point = {left: 10, top: 10};
+		var size = {w: 100, h: 30};
+		var ctx = document.getElementById("inputGraph").getContext("2d");
+
+		drawSequence(ctx,"#e00","A", lab1.A);
+		
 		return lab1;
 	});
 
@@ -139,7 +190,5 @@ function Lab1Ctrl ($scope, lab1) {
 
 	$scope.lab1 = lab1;
 	$scope.lab1Optimized = lab1.optimize();
-	console.log(lab1.X(lab1.K()));
-	console.log(lab1.optimize());
 }
 
