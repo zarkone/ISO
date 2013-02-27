@@ -1,20 +1,29 @@
 table {
-	border: 1px solid black;
-	border-spacing: 0px;
+
 	margin: 10px;
 	padding: 0px;
 	float: left;
+	border-spacing: 0px;
 
+}
+thead tr {
+	background: #eee;
+	font-style: italic;
+}
+.i {
+	width: 30px;
+	text-align: left;
+	color: #888;
 }
 
 td {
-	width: 15px;
+	border: 1px solid #eee;
+
+	width: 25px;
 	height: 15px;
+	text-align: center;
 }
-.class-1 {	background: #909090; }
-.class1 {	background: #B6AD01; }
-.class2 {	background: #4AB300; }
-.class3 {	background: #05CC87; }
-.class4 {	background: #0753BE; }
-.class5 {	background: #940DD4; }
-.class6 {	background: #E81313; }
+
+.data {
+	width: 300px;
+}

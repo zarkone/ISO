@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="game">
+<head>
+	<meta charset="utf-8">
+	<title>Теория игр л.1</title>
+
+	<!-- Le styles -->
+	<link href="/custom.css" rel="stylesheet">
+
+</head>
+
+<body>
+	<div ng-controller="Lab1Ctrl" >
+		<div class="data">
+			<h2>Исходная таблица</h2>
+			<table >
+				<thead>
+					<tr>
+						<td class="i">i</td><td>Ai</td><td>Bi</td>
+					</tr>
+				</thead>
+				<tbody>
+						<tr ng-repeat="Ai in lab1.A">
+							<td class="i"> {{ $index + 1}} </td>
+							<td> {{ Ai }} </td>
+							<td> {{ lab1.B[$index] }} </td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="data">
+			<h2>Оптимизированная таблица</h2>
+			<table >
+				<thead>
+					<tr>
+						<td class="i">i</td><td>Ai</td><td>Bi</td>
+					</tr>
+				</thead>
+				<tbody>
+						<tr ng-repeat="Ai in lab1Optimized.A">
+							<td class="i"> {{ $index + 1}} </td>
+							<td> {{ Ai }} </td>
+							<td> {{ lab1Optimized.B[$index] }} </td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+		<script src="/angular.js"></script>
+		<script src="/script.js"></script>
+
+</body>
+</html>
