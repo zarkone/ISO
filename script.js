@@ -3,8 +3,8 @@ angular.module("game", []).
 		
 		var lab1 = {};
 
-		lab1.A = [4,30,6,4,2];
-		lab1.B = [1,4,30,5,3];
+		lab1.A = [4,10,6,4,2];
+		lab1.B = [1,4,10,5,3];
 
 		/**
 		 * Returns max array element. Widely used in this lab.
@@ -147,7 +147,7 @@ angular.module("game", []).
 			
 			/* Text, on the center of rectangle*/
 			ctx.fillStyle = "#000";
-			ctx.font = "16pt Ubuntu";
+			ctx.font = "12pt Ubuntu";
 
 			var textPos = {};
 				textPos.x = point.left + (size.w/2) - 5;
@@ -155,27 +155,45 @@ angular.module("game", []).
 
 			ctx.fillText(text, textPos.x, textPos.y);
 		}
-
-		function drawSequence(ctx, color, name, seq, depSeq, scale) {
+		/**
+		 * Static method to draw sequence.
+		 * 
+		 * @param  {Canvas 2D context} 	ctx 	Canvas context
+		 * @param  {String} 			color	Color of blocks  
+		 * @param  {String} 			name    A, B, C etc..
+		 * @param  {Object} 			point  Where to start 
+		 * @param  {Array} 				seq    Sequence to draw
+		 * @param  {Array} 				depSeq Depending sequence
+		 * @param  {Integer} 			scale  Scale coefficient
+		 */
+		lab1.drawSequence = function (ctx, color, name, point, seq, depSeq, scale) {
 
 			scale = scale || 20;
-			var point = {top: 20, left: 20};
 			var size = {w: 0, h: 30};
 
 			seq.forEach(function (el, i) {
 
 				size.w = el * scale;
+
+
+				if(depSeq !== undefined) {
+
+					if(i > 0) {
+						point.left += Math.max(seq[i-1], depSeq[i]) * scale + 2;
+					}
+					else {
+						point.left += depSeq[i] * scale + 2;
+					}
+				}
+
 				drawRect(ctx, name + i, color, point, size);
-				point.left += size.w + 2;
+
+				if (depSeq == undefined) {
+					point.left += size.w + 2;
+				}
 
 			});
 		}
-		
-		var point = {left: 10, top: 10};
-		var size = {w: 100, h: 30};
-		var ctx = document.getElementById("inputGraph").getContext("2d");
-
-		drawSequence(ctx,"#e00","A", lab1.A);
 		
 		return lab1;
 	});
@@ -189,6 +207,22 @@ angular.module("game", []).
 function Lab1Ctrl ($scope, lab1) {
 
 	$scope.lab1 = lab1;
-	$scope.lab1Optimized = lab1.optimize();
+	var lab1Optimized = lab1.optimize();
+	$scope.lab1Optimized = lab1Optimized;
+	
+	var point = {top: 20, left: 20};
+	var ctx = document.getElementById("inputGraph").getContext("2d");
+
+	lab1.drawSequence(ctx,"#e00","A",point, lab1.A);
+	
+	point = {top: 80, left: 20};
+	lab1.drawSequence(ctx,"#00e","B",point, lab1.B, lab1.A);
+	
+	point = {top: 20, left: 20};
+	ctx = document.getElementById("optimizedGraph").getContext("2d");
+	lab1.drawSequence(ctx,"#e00","A",point, lab1Optimized.A);
+	
+	point = {top: 80, left: 20};
+	lab1.drawSequence(ctx,"#00e","B",point, lab1Optimized.B, lab1Optimized.A);
 }
 
