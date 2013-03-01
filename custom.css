@@ -33,3 +33,7 @@ canvas {
 	border: 2px solid #eee;
 	float: left;
 }
+.stat {
+	width: 400px;
+	margin-left: 200px;
+}

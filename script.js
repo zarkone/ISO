@@ -3,7 +3,7 @@ angular.module("game", []).
 		
 		var lab1 = {};
 
-		lab1.A = [4,10,6,4,2];
+		lab1.A = [8,13,6,3,2];
 		lab1.B = [1,4,10,5,3];
 
 		/**
@@ -175,7 +175,6 @@ angular.module("game", []).
 
 				size.w = el * scale;
 
-
 				if(depSeq !== undefined) {
 
 					if(i > 0) {
@@ -186,7 +185,7 @@ angular.module("game", []).
 					}
 				}
 
-				drawRect(ctx, name + i, color, point, size);
+				drawRect(ctx, name + (i +1), color, point, size);
 
 				if (depSeq == undefined) {
 					point.left += size.w + 2;
@@ -208,8 +207,11 @@ function Lab1Ctrl ($scope, lab1) {
 
 	$scope.lab1 = lab1;
 	var lab1Optimized = lab1.optimize();
+	lab1Optimized.K = lab1.K;
+	lab1Optimized.X = lab1.X;
 	$scope.lab1Optimized = lab1Optimized;
 	
+
 	var point = {top: 20, left: 20};
 	var ctx = document.getElementById("inputGraph").getContext("2d");
 
@@ -218,11 +220,27 @@ function Lab1Ctrl ($scope, lab1) {
 	point = {top: 80, left: 20};
 	lab1.drawSequence(ctx,"#00e","B",point, lab1.B, lab1.A);
 	
+	$scope.lab1.KValue = lab1.K();
+	$scope.lab1.XValue = lab1.X($scope.lab1.KValue);
+	var BSum = 0;
+	lab1.B.forEach (function (el){ BSum += el; });
+	$scope.lab1.BSum = BSum;
+	$scope.lab1.TValue = BSum + lab1.XValue;
+
+
 	point = {top: 20, left: 20};
 	ctx = document.getElementById("optimizedGraph").getContext("2d");
 	lab1.drawSequence(ctx,"#e00","A",point, lab1Optimized.A);
 	
 	point = {top: 80, left: 20};
 	lab1.drawSequence(ctx,"#00e","B",point, lab1Optimized.B, lab1Optimized.A);
+
+	$scope.lab1Optimized.KValue = lab1Optimized.K();
+	$scope.lab1Optimized.XValue = lab1Optimized.X($scope.lab1Optimized.KValue);
+	var BSum = 0;
+	lab1Optimized.B.forEach (function (el){ BSum += el; });
+	$scope.lab1Optimized.BSum = BSum;
+	$scope.lab1Optimized.TValue = BSum + lab1Optimized.XValue;
+
 }
 

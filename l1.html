@@ -2,7 +2,7 @@
 <html lang="ru" ng-app="game">
 <head>
 	<meta charset="utf-8">
-	<title>Теория игр л.1</title>
+	<title>Теория игр л.1 Алгоритм Джонсона</title>
 
 	<!-- Le styles -->
 	<link href="/custom.css" rel="stylesheet">
@@ -16,7 +16,7 @@
 			<table >
 				<thead>
 					<tr>
-						<td class="i">i</td><td>Ai</td><td>Bi</td>
+						<td class="i">i</td><td>A</td><td>B</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -28,6 +28,11 @@
 				</tbody>
 			</table>
 			<canvas id="inputGraph" width="1000" height="200"></canvas>
+			<div class="stat">
+				T: {{ lab1.TValue }}, 
+				B: {{ lab1.BSum }}, 
+				X: {{ lab1.XValue }}
+			</div>
 		</div>
 
 		
@@ -36,7 +41,7 @@
 			<table >
 				<thead>
 					<tr>
-						<td class="i">i</td><td>Ai</td><td>Bi</td>
+						<td class="i">i</td><td>A</td><td>B</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -48,6 +53,11 @@
 				</tbody>
 			</table>
 			<canvas id="optimizedGraph" width="1000" height="200"></canvas>
+			<div class="stat">
+				T: {{ lab1Optimized.TValue }}, 
+				B: {{ lab1Optimized.BSum }}, 
+				X: {{ lab1Optimized.XValue }}
+			</div>
 		</div>
 	</div>
 
