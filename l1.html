@@ -11,26 +11,31 @@
 
 <body>
 	<div ng-controller="Lab1Ctrl" >
+
+		<select ng-change="sequenceCountClicked()"
+						ng-options="value.number as value.label for value in sequenceCountOptions"
+						ng-model="sequenceCount">
+		</select>
+
 		<div class="data">
 			<h2>Исходная таблица</h2>
-			<table >
+			<table>
 				<thead>
 					<tr>
-						<td class="i">i</td><td>A</td><td>B</td>
+						<td class="i">i</td>
+						<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col }}</td>
 					</tr>
 				</thead>
 				<tbody>
 						<tr ng-repeat="Ai in lab1.A">
 							<td class="i"> {{ $index + 1}} </td>
-							<td> {{ Ai }} </td>
-							<td> {{ lab1.B[$index] }} </td>
+							<td ng-repeat="col in columns.slice(0,sequenceCount)">{{ lab1[col][$parent.$index]}}</td>
 						</tr>
 				</tbody>
 			</table>
 			<canvas id="inputGraph" width="1000" height="200"></canvas>
 			<div class="stat">
 				T: {{ lab1.TValue }}, 
-				B: {{ lab1.BSum }}, 
 				X: {{ lab1.XValue }}
 			</div>
 		</div>
@@ -38,24 +43,23 @@
 		
 		<div class="data">
 			<h2>Оптимизированная таблица</h2>
-			<table >
-				<thead>
-					<tr>
-						<td class="i">i</td><td>A</td><td>B</td>
-					</tr>
-				</thead>
-				<tbody>
-						<tr ng-repeat="Ai in lab1Optimized.A">
-							<td class="i"> {{ $index + 1}} </td>
-							<td> {{ Ai }} </td>
-							<td> {{ lab1Optimized.B[$index] }} </td>
+				<table>
+					<thead>
+						<tr>
+							<td class="i">i</td>
+							<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col }}</td>
 						</tr>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+							<tr ng-repeat="Ai in lab1Optimized.A">
+								<td class="i"> {{ $index + 1}} </td>
+								<td ng-repeat="col in columns.slice(0,sequenceCount)">{{ lab1Optimized[col][$parent.$index]}}</td>
+							</tr>
+					</tbody>
+				</table>
 			<canvas id="optimizedGraph" width="1000" height="200"></canvas>
 			<div class="stat">
 				T: {{ lab1Optimized.TValue }}, 
-				B: {{ lab1Optimized.BSum }}, 
 				X: {{ lab1Optimized.XValue }}
 			</div>
 		</div>
