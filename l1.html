@@ -16,14 +16,15 @@
 			<table >
 				<thead>
 					<tr>
-						<td class="i">i</td><td>Ai</td><td>Bi</td>
+						<td class="i">i</td><td>Ai</td><td>Bi</td><td>Ci</td>
 					</tr>
 				</thead>
 				<tbody>
 						<tr ng-repeat="Ai in lab1.A">
 							<td class="i"> {{ $index + 1}} </td>
-							<td> {{ Ai }} </td>
+							<td> {{ lab1.A[$index] }} </td>
 							<td> {{ lab1.B[$index] }} </td>
+							<td> {{ lab1.C[$index] }} </td>
 						</tr>
 				</tbody>
 			</table>
@@ -36,14 +37,16 @@
 			<table >
 				<thead>
 					<tr>
-						<td class="i">i</td><td>Ai</td><td>Bi</td>
+						<td class="i">i</td><td>Ai</td><td>Bi</td><td>Ci</td>
 					</tr>
 				</thead>
 				<tbody>
 						<tr ng-repeat="Ai in lab1Optimized.A">
 							<td class="i"> {{ $index + 1}} </td>
-							<td> {{ Ai }} </td>
+							<td> {{ lab1Optimized.A[$index] }} </td>
 							<td> {{ lab1Optimized.B[$index] }} </td>
+							
+							<td> {{ lab1Optimized.C[$index] }} </td>
 						</tr>
 				</tbody>
 			</table>

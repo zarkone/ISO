@@ -1,6 +1,6 @@
 angular.module("game", []).
 	factory("lab1", function () {
-		
+uuy		
 		var lab1 = {};
 
 		lab1.A = [4,10,6,4,12];
@@ -82,7 +82,7 @@ angular.module("game", []).
 
 		};
 
-		lab1.optimize = function (seqA, seqB) {
+		lab1.optimize = function (seqA, seqB, seqC) {
 		 	
 		 	// clone input sequences
 		 	var A = seqA.slice(0);
@@ -100,6 +100,19 @@ angular.module("game", []).
 		 		end = A.length - 1,
 		 		insertTo = 0;
 		 	
+		 	if (seqC != undefined) { 
+
+		 		var C = seqC.slice(0); 
+		 		newSequences.C = [];
+
+		 		for (var i = A.length - 1; i >= 0; i--) {
+		 			A[i] += B[i];
+		 			B[i] += C[i];
+		 		};
+
+		 	} else {
+
+		 	}
 
 		 	while(A.length > 0) {
 		 		
@@ -116,9 +129,13 @@ angular.module("game", []).
 		 			end--;
 		 			min = minB;
 		 		}
-
-	 			newSequences.A[insertTo] = A[min.index];
-	 			newSequences.B[insertTo] = B[min.index];
+ 
+	 			newSequences.A[insertTo] = seqA[min.index];
+	 			newSequences.B[insertTo] = seqB[min.index];
+	 			
+			 	if (seqC != undefined) { 
+		 			newSequences.C[insertTo] = seqC[min.index];
+				}
 
 	 			// Unlink line from [A B] table
 	 			A = A.slice(0,min.index).concat( A.slice(min.index+1) );
@@ -209,7 +226,8 @@ angular.module("game", []).
 function Lab1Ctrl ($scope, lab1) {
 
 	$scope.lab1 = lab1;
-	var lab1Optimized = lab1.optimize(lab1.A, lab1.B);
+	var lab1Optimized = lab1.optimize(lab1.A, lab1.B, lab1.C);
+	console.log(lab1)
 	$scope.lab1Optimized = lab1Optimized;
 	
 	var point = {top: 20, left: 20};
@@ -219,12 +237,19 @@ function Lab1Ctrl ($scope, lab1) {
 	
 	point = {top: 80, left: 20};
 	lab1.drawSequence(ctx,"#00e","B",point, lab1.B, lab1.A);
+
+	point = {top: 140, left: 20};
+	lab1.drawSequence(ctx,"#0ee","C",point, lab1.C, lab1.B);
 	
+
 	point = {top: 20, left: 20};
 	ctx = document.getElementById("optimizedGraph").getContext("2d");
 	lab1.drawSequence(ctx,"#e00","A",point, lab1Optimized.A);
 	
 	point = {top: 80, left: 20};
 	lab1.drawSequence(ctx,"#00e","B",point, lab1Optimized.B, lab1Optimized.A);
+
+	point = {top: 140, left: 20};
+	lab1.drawSequence(ctx,"#0ee","C",point, lab1Optimized.C, lab1Optimized.B);
 }
 
