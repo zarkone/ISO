@@ -3,8 +3,9 @@ angular.module("game", []).
 		
 		var lab1 = {};
 
-		lab1.A = [4,10,6,4,2];
+		lab1.A = [4,10,6,4,12];
 		lab1.B = [1,4,10,5,3];
+		lab1.C = [1,2,3,4,5];
 
 		/**
 		 * Returns max array element. Widely used in this lab.
@@ -23,6 +24,7 @@ angular.module("game", []).
 			});		
 
 			return {'value': max, 'index': index};
+			
 		}
 		/**
 		 * Returns min array element. Widely used in this lab.
@@ -44,24 +46,25 @@ angular.module("game", []).
 			return {'value': min, 'index': index};
 		}
 
+
 		/**
 		 * Pre-counts K-coefficients.
 		 * 
-		 * @param  {Object} sequences Object containing A and B sequences.
+		 * @param  {Array} 	A
+		 * @param  {Array} 	B
 		 * @return {Array}  Array of K.
 		 */ 
-		lab1.K = function (sequences) {
-		 	sequences = sequences || this;
+		lab1.K = function (A, B) {
 
 			var AiSum = 0, 
 				BiSum = 0;
-			var i, sequenceLen = sequences.A.length; 
+			var i, sequenceLen = A.length; 
 			var K = [];
 
-			K[0] = sequences.A[0];
+			K[0] = A[0];
 
 			for (i = 1; i < sequenceLen; i++) {
-				K[i] = K[i-1] + sequences.A[i] - sequences.B[i-1];
+				K[i] = K[i-1] + A[i] - B[i-1];
 			};
 
 			return K;
@@ -79,12 +82,11 @@ angular.module("game", []).
 
 		};
 
-		lab1.optimize = function (sequences) {
-		 	sequences = sequences || this;
+		lab1.optimize = function (seqA, seqB) {
 		 	
 		 	// clone input sequences
-		 	var A = sequences.A.slice(0);
-		 	var B = sequences.B.slice(0);
+		 	var A = seqA.slice(0);
+		 	var B = seqB.slice(0);
 
 		 	var newSequences = {};
 		 		newSequences.A = [];
@@ -207,7 +209,7 @@ angular.module("game", []).
 function Lab1Ctrl ($scope, lab1) {
 
 	$scope.lab1 = lab1;
-	var lab1Optimized = lab1.optimize();
+	var lab1Optimized = lab1.optimize(lab1.A, lab1.B);
 	$scope.lab1Optimized = lab1Optimized;
 	
 	var point = {top: 20, left: 20};
