@@ -78,6 +78,7 @@ angular.module("game", []).
 				if(sequences.length == 3) {
 					H[i] = H[i-1] + sequences[1][i] - sequences[2][i-1];
 					KH[i] = K[i] + H[i]
+					console.log(K[i], H[i]);
 				}
 			};
 			
@@ -266,21 +267,20 @@ angular.module("game", []).
 function Lab1Ctrl ($scope, lab1) {
 
 	$scope.sequences = [];
-
 	
-	$scope.sequences[0] = [4,10,6,4,2];
-	$scope.sequences[1] = [1,4,10,5,3];
-	$scope.sequences[2] = [1,2,3,4,5];
+	$scope.sequences[0] = [6,8,5,4,9];
+	$scope.sequences[1] = [3,5,6,2,4];
+	$scope.sequences[2] = [7,8,11,6,10];
 
 	var names = ["A", "B", "C"];
 	var colors = ["#e00", "#e0e", "#eee"];
 
 	$scope.sequenceCount = 3;
-	$scope.columns = names;
 	$scope.sequenceCountOptions = [];
 	$scope.sequenceCountOptions[0] = {number: 2, label: "2 последовательности"};
 	$scope.sequenceCountOptions[1] = {number: 3, label: "3 последовательности"};
 
+	$scope.columns = names;
 	
 
 	$scope.$watch('sequenceCount', function (newValue, oldValue) {
