@@ -41,6 +41,18 @@ angular.module("game", []).
 
 			return {'value': min, 'index': index};
 		}
+		/**
+		 * Get sum of sequence 
+		 * 
+		 * @param  {Array} sequence 
+		 * @return {Integer}          
+		 */
+		lab1.getSum = function(sequence) {
+			var sum = 0;
+			sequence.forEach (function(el) { sum += el; });
+
+			return sum;
+		};
 
 		/**
 		 * Pre-counts K-coefficients.
@@ -49,20 +61,32 @@ angular.module("game", []).
 		 * @return {Array}  Array of K.
 		 */ 
 		lab1.K = function (sequences) {
-		 	sequences = sequences || this;
 
-			var AiSum = 0, 
-				BiSum = 0;
-			var i, sequenceLen = sequences.A.length; 
+			var i, sequenceLen = sequences[0].length; 
 			var K = [];
+				K[0] = sequences[0][0];
 
-			K[0] = sequences.A[0];
+			if(sequences.length == 3) {
+				var H = [], KH = [];
+					H[0] = sequences[1][0];
+					KH[0] = K[0] + H[0];
+			}	
 
 			for (i = 1; i < sequenceLen; i++) {
-				K[i] = K[i-1] + sequences.A[i] - sequences.B[i-1];
+				K[i] = K[i-1] + sequences[0][i] - sequences[1][i-1];
+				
+				if(sequences.length == 3) {
+					H[i] = H[i-1] + sequences[1][i] - sequences[2][i-1];
+					KH[i] = K[i] + H[i]
+				}
 			};
-
-			return K;
+			
+			if(sequences.length == 3) {
+				return KH;
+			} 
+			else {
+				return K;
+			}
 		};
 
 		/**
@@ -242,29 +266,33 @@ angular.module("game", []).
 function Lab1Ctrl ($scope, lab1) {
 
 	$scope.sequences = [];
+
+	
 	$scope.sequences[0] = [4,10,6,4,2];
 	$scope.sequences[1] = [1,4,10,5,3];
 	$scope.sequences[2] = [1,2,3,4,5];
 
-	$scope.columns = ["Ai", "Bi", "Ci"];
+	var names = ["A", "B", "C"];
+	var colors = ["#e00", "#e0e", "#eee"];
 
 	$scope.sequenceCount = 3;
+	$scope.columns = names;
 	$scope.sequenceCountOptions = [];
 	$scope.sequenceCountOptions[0] = {number: 2, label: "2 последовательности"};
 	$scope.sequenceCountOptions[1] = {number: 3, label: "3 последовательности"};
 
-	var names = ["A", "B", "C"];
-	var colors = ["#e00", "#e0e", "#eee"];
+	
 
 	$scope.$watch('sequenceCount', function (newValue, oldValue) {
-		console.log($scope.sequences.slice(0, $scope.sequenceCount));
-		$scope.optimizedSequences = lab1.optimize($scope.sequences.slice(0, $scope.sequenceCount));
+
+		var sequences = $scope.sequences.slice(0, $scope.sequenceCount); 
+		$scope.optimizedSequences = lab1.optimize(sequences);
 		
 		var canvas = document.getElementById("inputGraph");
 		var ctx = canvas.getContext("2d");
 
 		lab1.drawRect(ctx, "", "#fff", {top: 0, left: 0}, {w: canvas.width, h: canvas.height});
-		lab1.drawSequence(ctx,colors,names, $scope.sequences.slice(0, $scope.sequenceCount));
+		lab1.drawSequence(ctx,colors,names, sequences);
 		
 
 		canvas = document.getElementById("optimizedGraph");
@@ -273,6 +301,17 @@ function Lab1Ctrl ($scope, lab1) {
 		lab1.drawRect(ctx, "", "#fff", {top: 0, left: 0}, {w: canvas.width, h: canvas.height});
 		lab1.drawSequence(ctx,colors,names, $scope.optimizedSequences);
 
+		var sourceParams = [];
+		var optimizedParams = [];
+
+		$scope.sourceParams = {};
+
+		$scope.sourceParams.X = lab1.X (lab1.K(sequences));
+		$scope.sourceParams.T = $scope.sourceParams.X + lab1.getSum (sequences[sequences.length - 1]);
+
+		$scope.optimizedParams = {};
+		$scope.optimizedParams.X = lab1.X (lab1.K($scope.optimizedSequences));
+		$scope.optimizedParams.T = $scope.optimizedParams.X + lab1.getSum ($scope.optimizedSequences[$scope.optimizedSequences.length - 1]);
 
 	});
 

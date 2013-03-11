@@ -24,7 +24,7 @@
 					<thead>
 						<tr>
 							<td class="i">i</td>
-							<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col }}</td>
+							<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col + "i" }}</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -39,8 +39,8 @@
 			</div>
 			<canvas id="inputGraph" width="1000" height="200"></canvas>
 			<div class="stat">
-				X: {{ sourceParams['X'] }}, 
-				T: {{ sourceParams['T'] }}, 
+				X: {{ sourceParams.X }}, 
+				T: {{ sourceParams.T }}, 
 			</div>
 		</div>
 
@@ -52,7 +52,7 @@
 					<thead>
 						<tr>
 							<td class="i">i</td>
-							<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col }}</td>
+							<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col + "i"}}</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -67,8 +67,8 @@
 			</div>
 			<canvas id="optimizedGraph" width="1000" height="200"></canvas>
 			<div class="stat">
-				X: {{ optimizedParams['X'] }}, 
-				T: {{ optimizedParams['T'] }}, 
+				X: {{ optimizedParams.X }}, 
+				T: {{ optimizedParams.T }}, 
 			</div>
 		</div>
 	</div>
