@@ -12,37 +12,14 @@
 <body>
 	<div ng-controller="Lab1Ctrl" >
 
-		<select ng-change="sequenceCountClicked()"
+		<select ng-change="sequenceCountChanged()"
 						ng-options="value.number as value.label for value in sequenceCountOptions"
 						ng-model="sequenceCount">
 		</select>
 
 		<div class="data">
 			<h2>Исходная таблица</h2>
-			<table>
-				<thead>
-					<tr>
-						<td class="i">i</td>
-						<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col }}</td>
-					</tr>
-				</thead>
-				<tbody>
-						<tr ng-repeat="Ai in lab1.A">
-							<td class="i"> {{ $index + 1}} </td>
-							<td ng-repeat="col in columns.slice(0,sequenceCount)">{{ lab1[col][$parent.$index]}}</td>
-						</tr>
-				</tbody>
-			</table>
-			<canvas id="inputGraph" width="1000" height="200"></canvas>
-			<div class="stat">
-				T: {{ lab1.TValue }}, 
-				X: {{ lab1.XValue }}
-			</div>
-		</div>
-
-		
-		<div class="data">
-			<h2>Оптимизированная таблица</h2>
+			<div class="tableContainer">
 				<table>
 					<thead>
 						<tr>
@@ -51,16 +28,47 @@
 						</tr>
 					</thead>
 					<tbody>
-							<tr ng-repeat="Ai in lab1Optimized.A">
+							<tr ng-repeat="Ai in sequences[0]">
 								<td class="i"> {{ $index + 1}} </td>
-								<td ng-repeat="col in columns.slice(0,sequenceCount)">{{ lab1Optimized[col][$parent.$index]}}</td>
+								<td ng-repeat="col in columns.slice(0,sequenceCount)">
+									{{ sequences[$index][$parent.$index]}}
+								</td>
 							</tr>
 					</tbody>
 				</table>
+			</div>
+			<canvas id="inputGraph" width="1000" height="200"></canvas>
+			<div class="stat">
+				X: {{ sourceParams['X'] }}, 
+				T: {{ sourceParams['T'] }}, 
+			</div>
+		</div>
+
+		
+		<div class="data">
+			<h2>Оптимизированная таблица</h2>
+			<div class="tableContainer">
+				<table>
+					<thead>
+						<tr>
+							<td class="i">i</td>
+							<td  ng-repeat="col in columns.slice(0,sequenceCount)">{{ col }}</td>
+						</tr>
+					</thead>
+					<tbody>
+							<tr ng-repeat="Ai in optimizedSequences[0]">
+								<td class="i"> {{ $index + 1}} </td>
+								<td ng-repeat="col in columns.slice(0,sequenceCount)">
+									{{ optimizedSequences[$index][$parent.$index]}}
+								</td>
+							</tr>
+					</tbody>
+				</table>
+			</div>
 			<canvas id="optimizedGraph" width="1000" height="200"></canvas>
 			<div class="stat">
-				T: {{ lab1Optimized.TValue }}, 
-				X: {{ lab1Optimized.XValue }}
+				X: {{ optimizedParams['X'] }}, 
+				T: {{ optimizedParams['T'] }}, 
 			</div>
 		</div>
 	</div>

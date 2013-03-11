@@ -37,3 +37,9 @@ canvas {
 	width: 400px;
 	margin-left: 200px;
 }
+
+.tableContainer {
+	width: 150px; 
+	height: 200px; 
+	float: left;
+}

@@ -3,9 +3,7 @@ angular.module("game", []).
 		
 		var lab1 = {};
 
-		lab1.A = [4,10,6,4,12];
-		lab1.B = [1,4,10,5,3];
-
+		
 		/**
 		 * Returns max array element. Widely used in this lab.
 		 * @param  {Array} array 
@@ -80,51 +78,72 @@ angular.module("game", []).
 		};
 
 		lab1.optimize = function (sequences) {
-		 	sequences = sequences || this;
-		 	
+					 	
 		 	// clone input sequences
-		 	var A = sequences.A.slice(0);
-		 	var B = sequences.B.slice(0);
+		 	var A = sequences[0].slice(0);
+		 	var B = sequences[1].slice(0);
 
-		 	var newSequences = {};
-		 		newSequences.A = [];
-		 		newSequences.B = [];
+		 	var newSequences = [];
+		 		newSequences[0] = [];
+		 		newSequences[1] = [];
 
-		 	var minA = 0, 
-		 		minB = 0, 
+		 	if(sequences.length == 3) {
+			 	
+			 	var C = sequences[2].slice(0);
+			 	newSequences[2] = [];
+
+		 		for (var i = A.length - 1; i >= 0; i--) {
+		 			A[i] += B[i];
+		 			B[i] += C[i];
+		 		};
+		 	}
+
+		 	var min0 = 0, 
+		 		min1 = 0, 
 		 		min = {},
 
 		 		begin = 0,
 		 		end = A.length - 1,
 		 		insertTo = 0;
 		 	
-
 		 	while(A.length > 0) {
 		 		
-		 		minA = getMin(A);
-		 		minB = getMin(B);
+		 		min0 = getMin(A);
+		 		min1 = getMin(B);
 
-		 		if(minA.value < minB.value) {
+		 		if(min0.value < min1.value) {
 		 			insertTo = begin;
 		 			begin++;
-		 			min = minA;
+		 			min = min0;
 		 		}
 		 		else {
 		 			insertTo = end;
 		 			end--;
-		 			min = minB;
+		 			min = min1;
 		 		}
+	 			newSequences[0][insertTo] = A[min.index];
+	 			newSequences[1][insertTo] = B[min.index];
+			 	
+			 	if(sequences.length == 3) { 
 
-	 			newSequences.A[insertTo] = A[min.index];
-	 			newSequences.B[insertTo] = B[min.index];
+	 				newSequences[2][insertTo] = C[min.index];
 
-	 			// Unlink line from [A B] table
+	 				newSequences[0][insertTo] -= B[min.index] - C[min.index];
+	 				newSequences[1][insertTo] -= C[min.index];
+
+		 			C = C.slice(0,min.index).concat( C.slice(min.index+1) );
+			 	}
+
+	 			// Cross the line from table
 	 			A = A.slice(0,min.index).concat( A.slice(min.index+1) );
 	 			B = B.slice(0,min.index).concat( B.slice(min.index+1) );
+
 		 	}
-			
+
+
 			return newSequences;
 		};
+		
 
 		/**
 		 * Just draw rectangle. 
@@ -134,7 +153,7 @@ angular.module("game", []).
 		 * @param  {Object} point  [description]
 		 * @param  {Object} size   [description]
 		 */
-		function drawRect(ctx, text, color, point, size) {
+		lab1.drawRect = function(ctx, text, color, point, size) {
 			
 
 			ctx.lineWidth = 2;
@@ -156,14 +175,12 @@ angular.module("game", []).
 			ctx.fillText(text, textPos.x, textPos.y);
 		}
 		/**
-		 * Static method to draw sequence.
+		 * Static method to draw sequences.
 		 * 
 		 * @param  {Canvas 2D context} 	ctx 	Canvas context
-		 * @param  {String} 			color	Color of blocks  
-		 * @param  {String} 			name    A, B, C etc..
-		 * @param  {Object} 			point  Where to start 
-		 * @param  {Array} 				seq    Sequence to draw
-		 * @param  {Array} 				depSeq Depending sequence
+		 * @param  {String} 			colors	Colors of blocks  
+		 * @param  {String} 			names    A, B, C etc..
+		 * @param  {Array} 				sequences    Sequences to draw
 		 * @param  {Integer} 			scale  Scale coefficient
 		 */
 		lab1.drawSequence = function (ctx, colors, names, sequences, scale) {
@@ -202,7 +219,7 @@ angular.module("game", []).
 					// console.log(i, point.left);
 					// console.log(i, size.w);
 
-					drawRect(ctx, names[i] + k, colors[i], point, size);
+					lab1.drawRect(ctx, names[i] + k, colors[i], point, size);
 
 					point.top += 50;
 					sum[i] = Math.max(prevSum, sum[i]) + sequence[k];
@@ -224,16 +241,40 @@ angular.module("game", []).
  */
 function Lab1Ctrl ($scope, lab1) {
 
-	$scope.lab1 = lab1;
-	var lab1Optimized = lab1.optimize();
-	$scope.lab1Optimized = lab1Optimized;
-	
-	var ctx = document.getElementById("inputGraph").getContext("2d");
-	var names = ["A", "B"];
-	var colors = ["#e00", "#e0e"];
+	$scope.sequences = [];
+	$scope.sequences[0] = [4,10,6,4,2];
+	$scope.sequences[1] = [1,4,10,5,3];
+	$scope.sequences[2] = [1,2,3,4,5];
 
-	lab1.drawSequence(ctx,colors,names, [lab1.A, lab1.B]);
-	
-	
+	$scope.columns = ["Ai", "Bi", "Ci"];
+
+	$scope.sequenceCount = 3;
+	$scope.sequenceCountOptions = [];
+	$scope.sequenceCountOptions[0] = {number: 2, label: "2 последовательности"};
+	$scope.sequenceCountOptions[1] = {number: 3, label: "3 последовательности"};
+
+	var names = ["A", "B", "C"];
+	var colors = ["#e00", "#e0e", "#eee"];
+
+	$scope.$watch('sequenceCount', function (newValue, oldValue) {
+		console.log($scope.sequences.slice(0, $scope.sequenceCount));
+		$scope.optimizedSequences = lab1.optimize($scope.sequences.slice(0, $scope.sequenceCount));
+		
+		var canvas = document.getElementById("inputGraph");
+		var ctx = canvas.getContext("2d");
+
+		lab1.drawRect(ctx, "", "#fff", {top: 0, left: 0}, {w: canvas.width, h: canvas.height});
+		lab1.drawSequence(ctx,colors,names, $scope.sequences.slice(0, $scope.sequenceCount));
+		
+
+		canvas = document.getElementById("optimizedGraph");
+		ctx = canvas.getContext("2d");
+		
+		lab1.drawRect(ctx, "", "#fff", {top: 0, left: 0}, {w: canvas.width, h: canvas.height});
+		lab1.drawSequence(ctx,colors,names, $scope.optimizedSequences);
+
+
+	});
+
 }
 
