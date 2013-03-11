@@ -3,7 +3,7 @@ angular.module("game", []).
 		
 		var lab1 = {};
 
-		lab1.A = [4,10,6,4,2];
+		lab1.A = [4,10,6,4,12];
 		lab1.B = [1,4,10,5,3];
 
 		/**
@@ -166,33 +166,51 @@ angular.module("game", []).
 		 * @param  {Array} 				depSeq Depending sequence
 		 * @param  {Integer} 			scale  Scale coefficient
 		 */
-		lab1.drawSequence = function (ctx, color, name, point, seq, depSeq, scale) {
+		lab1.drawSequence = function (ctx, colors, names, sequences, scale) {
 
 			scale = scale || 20;
 			var size = {w: 0, h: 30};
+			var sum = new Array(sequences.length);
 
-			seq.forEach(function (el, i) {
+				for (var i = sequences.length - 1; i >= 0; i--) {
+					sum[i] = 0;
+				};
 
-				size.w = el * scale;
+			var point = {left: 20, top: 20};
+			var prevSum = 0, prevSeq = 0;
 
+			sequences[0].forEach (function (s, k) {
 
-				if(depSeq !== undefined) {
+				point.top = 20;
+				sequences.forEach (function (sequence, i) {
 
-					if(i > 0) {
-						point.left += Math.max(seq[i-1], depSeq[i]) * scale + 2;
+					
+					if(sequences[i-1] != undefined) {
+						prevSeq = sequences[i][k-1] || 0;
+						prevSum = sum[i-1];
+					} else {
+						prevSeq = 0;
+						prevSum = 0;
 					}
-					else {
-						point.left += depSeq[i] * scale + 2;
-					}
-				}
 
-				drawRect(ctx, name + i, color, point, size);
+					size.w = sequence[k];
+					size.w *= scale;
 
-				if (depSeq == undefined) {
-					point.left += size.w + 2;
-				}
+					point.left = Math.max(prevSum, sum[i]);
+					point.left *= scale;
+					
+					// console.log(i, point.left);
+					// console.log(i, size.w);
 
+					drawRect(ctx, names[i] + k, colors[i], point, size);
+
+					point.top += 50;
+					sum[i] = Math.max(prevSum, sum[i]) + sequence[k];
+		
+
+				});
 			});
+			
 		}
 		
 		return lab1;
@@ -210,19 +228,12 @@ function Lab1Ctrl ($scope, lab1) {
 	var lab1Optimized = lab1.optimize();
 	$scope.lab1Optimized = lab1Optimized;
 	
-	var point = {top: 20, left: 20};
 	var ctx = document.getElementById("inputGraph").getContext("2d");
+	var names = ["A", "B"];
+	var colors = ["#e00", "#e0e"];
 
-	lab1.drawSequence(ctx,"#e00","A",point, lab1.A);
+	lab1.drawSequence(ctx,colors,names, [lab1.A, lab1.B]);
 	
-	point = {top: 80, left: 20};
-	lab1.drawSequence(ctx,"#00e","B",point, lab1.B, lab1.A);
 	
-	point = {top: 20, left: 20};
-	ctx = document.getElementById("optimizedGraph").getContext("2d");
-	lab1.drawSequence(ctx,"#e00","A",point, lab1Optimized.A);
-	
-	point = {top: 80, left: 20};
-	lab1.drawSequence(ctx,"#00e","B",point, lab1Optimized.B, lab1Optimized.A);
 }
 
